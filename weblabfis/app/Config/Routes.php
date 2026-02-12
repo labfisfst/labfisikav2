@@ -40,3 +40,5 @@ $routes->post('home/simpan_booking', 'Home::simpan_booking');
 $routes->get('home/jadwal_alat/(:num)', 'Home::jadwal_alat/$1');
 
 $routes->get('semua_alat', 'Home::semuaAlat');
+
+$routes->get('home/hapus_booking/(:num)', 'Home::hapus_booking/$1');

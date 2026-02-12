@@ -23,8 +23,13 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm mb-4">
       <div class="container">
-        <a class="navbar-brand fw-bold" href="/">
-            <i class="bi bi-motherboard"></i> LAB FISIKA
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <i class="bi bi-cpu-fill me-2 fs-3"></i> <div>
+                <span class="fw-bold d-block" style="line-height: 1.2;">LAB FISIKA</span>
+                <small id="clock" class="d-block opacity-75" style="font-size: 0.75rem;">
+                    <?= date('d M Y | H:i:s'); ?>
+                </small>
+            </div>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
           <span class="navbar-toggler-icon"></span>

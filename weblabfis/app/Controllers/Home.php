@@ -313,4 +313,22 @@ class Home extends BaseController
 
         return view('jadwal_alat', $data);
     }
+    public function hapus_booking($id)
+    {
+        // Pastikan hanya admin yang bisa hapus
+        if (!session()->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+
+        $bookingModel = new \App\Models\BookingModel();
+        $dataBooking = $bookingModel->find($id);
+        
+        if ($dataBooking) {
+            $bookingModel->delete($id);
+            session()->setFlashdata('pesan', 'Jadwal penggunaan berhasil dihapus.');
+            return redirect()->to('/home/jadwal_alat/' . $dataBooking['alat_id']);
+        }
+
+        return redirect()->back();
+    }
 }

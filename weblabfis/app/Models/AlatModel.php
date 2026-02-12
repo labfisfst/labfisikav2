@@ -23,5 +23,5 @@ class AlatModel extends Model
         'gambar'
     ];
 
-    protected $useTimestamps = true;
+    protected $useTimestamps = false;
 }

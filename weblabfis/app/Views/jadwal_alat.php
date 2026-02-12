@@ -29,17 +29,19 @@
                             <th width="50">No</th>
                             <th>Nama Peminjam</th>
                             <th>Instansi</th>
-                            <th>Mulai Penggunaan</th>
-                            <th>Selesai Penggunaan</th>
+                            <th>Mulai</th>
+                            <th>Selesai</th>
                             <th class="text-center">Status</th>
+                            <?php if (session()->get('logged_in')) : ?>
+                                <th class="text-center">Aksi</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if (empty($jadwal)) : ?>
                             <tr>
-                                <td colspan="6" class="text-center py-5 text-muted">
-                                    <i class="bi bi-calendar-x d-block fs-1 mb-2"></i>
-                                    Belum ada jadwal penggunaan untuk alat ini.
+                                <td colspan="<?= session()->get('logged_in') ? '7' : '6' ?>" class="text-center py-5 text-muted">
+                                    Belum ada jadwal penggunaan.
                                 </td>
                             </tr>
                         <?php else : ?>
@@ -52,17 +54,37 @@
                                     <td><?= date('d M Y, H:i', strtotime($j['tgl_selesai'])); ?></td>
                                     <td class="text-center">
                                         <?php 
-                                        $badge = [
-                                            'Pending' => 'warning text-dark',
-                                            'Disetujui' => 'success',
-                                            'Ditolak' => 'danger',
-                                            'Selesai' => 'secondary'
-                                        ];
+                                            $sekarang = date('Y-m-d H:i:s');
+                                            $mulai    = $j['tgl_mulai'];
+                                            $selesai  = $j['tgl_selesai'];
+
+                                            if ($sekarang < $mulai) {
+                                                $status_teks = "Akan Datang";
+                                                $warna_badge = "info text-white";
+                                            } elseif ($sekarang >= $mulai && $sekarang <= $selesai) {
+                                                $status_teks = "Sedang Berlangsung";
+                                                $warna_badge = "warning text-dark";
+                                            } else {
+                                                $status_teks = "Selesai";
+                                                $warna_badge = "secondary";
+                                            }
                                         ?>
-                                        <span class="badge bg-<?= $badge[$j['status']] ?? 'primary'; ?>">
-                                            <?= $j['status']; ?>
+                                        <span class="badge bg-<?= $warna_badge; ?> px-3">
+                                            <?= $status_teks; ?>
                                         </span>
                                     </td>
+                                    
+                                    <?php if (session()->get('logged_in')) : ?>
+                                        <td class="text-center">
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="/home/hapus_booking/<?= $j['id']; ?>" 
+                                                class="btn btn-outline-danger" 
+                                                onclick="return confirm('Hapus jadwal ini?')">
+                                                    <i class="bi bi-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    <?php endif; ?>
                                 </tr>
                             <?php endforeach; ?>
                         <?php endif; ?>
