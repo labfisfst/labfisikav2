@@ -331,4 +331,22 @@ class Home extends BaseController
 
         return redirect()->back();
     }
+    public function update_booking($id)
+    {
+        if (!session()->get('logged_in')) return redirect()->to('/login');
+
+        $bookingModel = new \App\Models\BookingModel();
+        
+        $data = [
+            'nama_peminjam' => $this->request->getPost('nama_peminjam'),
+            'instansi'      => $this->request->getPost('instansi'),
+            'tgl_mulai'     => $this->request->getPost('tgl_mulai'),
+            'tgl_selesai'   => $this->request->getPost('tgl_selesai'),
+        ];
+
+        $bookingModel->update($id, $data);
+        
+        session()->setFlashdata('pesan', 'Jadwal berhasil diperbarui.');
+        return redirect()->back();
+    }
 }

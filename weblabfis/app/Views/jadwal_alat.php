@@ -40,50 +40,69 @@
                     <tbody>
                         <?php if (empty($jadwal)) : ?>
                             <tr>
-                                <td colspan="<?= session()->get('logged_in') ? '7' : '6' ?>" class="text-center py-5 text-muted">
-                                    Belum ada jadwal penggunaan.
-                                </td>
+                                <td colspan="<?= session()->get('logged_in') ? '7' : '6' ?>" class="text-center py-5 text-muted">Belum ada jadwal.</td>
                             </tr>
                         <?php else : ?>
                             <?php $no = 1; foreach ($jadwal as $j) : ?>
                                 <tr>
                                     <td><?= $no++; ?></td>
-                                    <td><span class="fw-bold text-primary"><?= $j['nama_peminjam']; ?></span></td>
+                                    <td><?= $j['nama_peminjam']; ?></td>
                                     <td><?= $j['instansi']; ?></td>
-                                    <td><?= date('d M Y, H:i', strtotime($j['tgl_mulai'])); ?></td>
-                                    <td><?= date('d M Y, H:i', strtotime($j['tgl_selesai'])); ?></td>
+                                    <td><?= date('d/m/y H:i', strtotime($j['tgl_mulai'])); ?></td>
+                                    <td><?= date('d/m/y H:i', strtotime($j['tgl_selesai'])); ?></td>
                                     <td class="text-center">
-                                        <?php 
-                                            $sekarang = date('Y-m-d H:i:s');
-                                            $mulai    = $j['tgl_mulai'];
-                                            $selesai  = $j['tgl_selesai'];
-
-                                            if ($sekarang < $mulai) {
-                                                $status_teks = "Akan Datang";
-                                                $warna_badge = "info text-white";
-                                            } elseif ($sekarang >= $mulai && $sekarang <= $selesai) {
-                                                $status_teks = "Sedang Berlangsung";
-                                                $warna_badge = "warning text-dark";
-                                            } else {
-                                                $status_teks = "Selesai";
-                                                $warna_badge = "secondary";
-                                            }
-                                        ?>
-                                        <span class="badge bg-<?= $warna_badge; ?> px-3">
-                                            <?= $status_teks; ?>
-                                        </span>
+                                        <span class="badge bg-secondary">Cek Waktu</span> 
                                     </td>
                                     
                                     <?php if (session()->get('logged_in')) : ?>
                                         <td class="text-center">
                                             <div class="btn-group btn-group-sm">
-                                                <a href="/home/hapus_booking/<?= $j['id']; ?>" 
-                                                class="btn btn-outline-danger" 
-                                                onclick="return confirm('Hapus jadwal ini?')">
+                                                <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#editModal<?= $j['id']; ?>">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <a href="/home/hapus_booking/<?= $j['id']; ?>" class="btn btn-outline-danger" onclick="return confirm('Hapus jadwal?')">
                                                     <i class="bi bi-trash"></i>
                                                 </a>
                                             </div>
                                         </td>
+
+                                        <div class="modal fade" id="editModal<?= $j['id']; ?>" tabindex="-1" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content text-start">
+                                                    <form action="/home/update_booking/<?= $j['id']; ?>" method="post">
+                                                        <?= csrf_field(); ?>
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title text-dark">Edit Jadwal: <?= $j['nama_peminjam']; ?></h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body text-dark">
+                                                            <div class="mb-3">
+                                                                <label class="form-label fw-bold small text-muted">Nama Peminjam</label>
+                                                                <input type="text" name="nama_peminjam" class="form-control" value="<?= $j['nama_peminjam']; ?>" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label fw-bold small text-muted">Instansi</label>
+                                                                <input type="text" name="instansi" class="form-control" value="<?= $j['instansi']; ?>" required>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-6 mb-3">
+                                                                    <label class="form-label fw-bold small text-muted">Waktu Mulai</label>
+                                                                    <input type="datetime-local" name="tgl_mulai" class="form-control" value="<?= date('Y-m-d\TH:i', strtotime($j['tgl_mulai'])); ?>" required>
+                                                                </div>
+                                                                <div class="col-md-6 mb-3">
+                                                                    <label class="form-label fw-bold small text-muted">Waktu Selesai</label>
+                                                                    <input type="datetime-local" name="tgl_selesai" class="form-control" value="<?= date('Y-m-d\TH:i', strtotime($j['tgl_selesai'])); ?>" required>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                            <button type="submit" class="btn btn-primary px-4">Simpan Perubahan</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                     <?php endif; ?>
                                 </tr>
                             <?php endforeach; ?>
