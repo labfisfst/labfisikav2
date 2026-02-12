@@ -95,24 +95,27 @@
                     <img src="/img/<?= $alat['gambar']; ?>" width="200" class="img-thumbnail rounded img-preview shadow-sm">
                 </div>
 
-                <div class="d-flex justify-content-between mt-4 pt-3 border-top">
-                    <div>
-                        <?php if (session()->get('logged_in')) : ?>
-                            <a href="/alat/hapus/<?= $alat['id']; ?>" class="btn btn-outline-danger px-4" onclick="return confirm('Hapus permanen data ini?')">
-                                <i class="bi bi-trash"></i> Hapus
-                            </a>
-                        <?php endif; ?>
-                    </div>
-                    
+                <div class="d-flex justify-content-between mt-4 pt-3 border-top">                    
                     <div class="d-flex gap-2">
                         <a href="javascript:history.back()" class="btn btn-secondary px-4">
                             <i class="bi bi-arrow-left-circle"></i> <?= session()->get('logged_in') ? 'Batal' : 'Kembali' ?>
                         </a>
                         
+                        <a href="<?= base_url('home/jadwal_alat/' . $alat['id']); ?>" class="btn btn-info px-4 shadow text-white">
+                            <i class="bi bi-calendar3"></i> Lihat Jadwal Penggunaan
+                        </a>
+
                         <?php if (session()->get('logged_in')) : ?>
                             <button type="submit" class="btn btn-success px-4 shadow">
                                 <i class="bi bi-check-circle"></i> Simpan Perubahan
                             </button>
+                        <?php endif; ?>
+                    </div>
+                    <div>
+                        <?php if (session()->get('logged_in')) : ?>
+                            <a href="/alat/hapus/<?= $alat['id']; ?>" class="btn btn-outline-danger px-4" onclick="return confirm('Hapus permanen data ini?')">
+                                <i class="bi bi-trash"></i> Hapus
+                            </a>
                         <?php endif; ?>
                     </div>
                 </div>

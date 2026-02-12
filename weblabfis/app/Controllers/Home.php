@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\AlatModel;
 use App\Models\LabsModel;
+use App\Models\BookingModel; // 1. TAMBAHKAN INI
 
 class Home extends BaseController
 {
@@ -93,14 +94,13 @@ class Home extends BaseController
         return view('tambah_alat', $data);
     }
 
-    // --- 4. Proses Simpan (DENGAN KOLOM BARU) ---
+    // --- 4. Proses Simpan ---
     public function simpan()
     {
         $alatModel = new AlatModel();
         
         $fileGambar = $this->request->getFile('gambar');
 
-        // Cek apakah ada gambar yang diupload
         if ($fileGambar && $fileGambar->getError() == 4) {
             $namaGambar = 'default.jpg'; 
         } else {
@@ -184,7 +184,7 @@ class Home extends BaseController
         return view('edit_alat', $data);
     }
 
-    // --- 7. Proses Update (DENGAN KOLOM BARU) ---
+    // --- 7. Proses Update ---
     public function update($id)
     {
         $alatModel = new AlatModel();
@@ -206,19 +206,19 @@ class Home extends BaseController
         }
 
         $data = [
-            'nama_alat'   => $this->request->getPost('nama_alat'),
-            'merek'       => $this->request->getPost('merek'),
-            'kode_barang' => $this->request->getPost('kode_barang'),
-            'lab_id'      => $this->request->getPost('lab_id'),
-            'tahun'       => $this->request->getPost('tahun'),
-            'jumlah'      => $this->request->getPost('jumlah'),
-            'satuan'      => $this->request->getPost('satuan'),
-            'fungsi'      => $this->request->getPost('fungsi'),
-            'kondisi'     => $this->request->getPost('kondisi'),
-            'gambar'      => $namaGambar 
-        ];
+        'nama_alat'   => $this->request->getPost('nama_alat'),
+        'merek'       => $this->request->getPost('merek'),       // Cek ini
+        'kode_barang' => $this->request->getPost('kode_barang'), // Cek ini
+        'lab_id'      => $this->request->getPost('lab_id'),
+        'tahun'       => $this->request->getPost('tahun'),
+        'jumlah'      => $this->request->getPost('jumlah'),
+        'satuan'      => $this->request->getPost('satuan'),
+        'fungsi'      => $this->request->getPost('fungsi'),
+        'kondisi'     => $this->request->getPost('kondisi'),
+        'gambar'      => $namaGambar 
+    ];
 
-        $alatModel->update($id, $data);
+    $alatModel->update($id, $data);
 
         return redirect()->to('/lab/' . $data['lab_id'])->with('pesan', 'Data berhasil diperbarui!');
     }
@@ -246,6 +246,44 @@ class Home extends BaseController
         return redirect()->back();
     }
 
+    // --- 9. FITUR BOOKING ---
+    public function booking($id)
+    {
+        $alatModel = new AlatModel();
+        $data = [
+            'title' => 'Form Peminjaman Alat',
+            'alat'  => $alatModel->find($id)
+        ];
+
+        if (!$data['alat']) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        return view('form_booking', $data);
+    }
+
+    public function simpan_booking()
+    {
+        $bookingModel = new BookingModel();
+
+        $bookingModel->save([
+            'alat_id'          => $this->request->getPost('alat_id'),
+            'nama_peminjam'    => $this->request->getPost('nama_peminjam'),
+            'identitas'        => $this->request->getPost('identitas'),
+            'instansi'         => $this->request->getPost('instansi'),
+            'keperluan'        => $this->request->getPost('keperluan'),
+            'dosen_pembimbing' => $this->request->getPost('dosen_pembimbing'),
+            'kontak_wa'        => $this->request->getPost('kontak_wa'),
+            'tgl_mulai'        => $this->request->getPost('tgl_mulai'),
+            'tgl_selesai'      => $this->request->getPost('tgl_selesai'),
+            'status'           => 'Pending'
+        ]);
+
+        session()->setFlashdata('pesan', 'Permohonan berhasil dikirim!');
+        return redirect()->to('/home/jadwal_alat/' . $this->request->getPost('alat_id'));
+    }
+
+    // --- 10. Setup DB ---
     public function setupDb()
     {
         $db = \Config\Database::connect();
@@ -260,6 +298,19 @@ class Home extends BaseController
         
         echo "✅ Setup Berhasil. <a href='/login'>Login Sekarang</a>";
     }
-    public function simpan_booking()
+    public function jadwal_alat($id)
+    {
+        $alatModel = new \App\Models\AlatModel();
+        $bookingModel = new \App\Models\BookingModel();
 
+        $data = [
+            'title'  => 'Jadwal Penggunaan Alat',
+            'alat'   => $alatModel->find($id),
+            'jadwal' => $bookingModel->where('alat_id', $id)
+                                    ->orderBy('tgl_mulai', 'ASC')
+                                    ->findAll()
+        ];
+
+        return view('jadwal_alat', $data);
+    }
 }

@@ -31,4 +31,12 @@ $routes->post('/alat/update/(:num)', 'Home::update/$1');  // Proses Update
 $routes->get('/alat/hapus/(:num)', 'Home::hapus/$1');     // Proses Hapus
 // ------------------------------------
 $routes->get('/setup-db', 'Home::setupDb');
+// Route untuk menampilkan halaman form booking
+$routes->get('home/booking/(:num)', 'Home::booking/$1');
 
+// Route untuk memproses pengiriman form booking
+$routes->post('home/simpan_booking', 'Home::simpan_booking');
+
+$routes->get('home/jadwal_alat/(:num)', 'Home::jadwal_alat/$1');
+
+$routes->get('semua_alat', 'Home::semuaAlat');

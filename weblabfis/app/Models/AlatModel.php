@@ -6,13 +6,22 @@ use CodeIgniter\Model;
 
 class AlatModel extends Model
 {
-    protected $table            = 'alat';
-    protected $primaryKey       = 'id';
-    protected $useAutoIncrement = true;
-    
-    // --- YANG BOLEH DIISI ---
-    protected $allowedFields = ['nama_alat', 'lab_id', 'gambar', 'tahun', 'kondisi', 'fungsi'];
-    // --- PENTING: SAYA UBAH JADI FALSE ---
-    // Supaya tidak error kalau belum ada kolom created_at/updated_at di database
-    protected $useTimestamps = false; 
+    protected $table      = 'alat';
+    protected $primaryKey = 'id';
+
+    // PASTIKAN SEMUA KOLOM INI ADA
+    protected $allowedFields = [
+        'nama_alat', 
+        'merek',        // <--- Harus ada
+        'kode_barang',   // <--- Harus ada
+        'lab_id', 
+        'tahun', 
+        'jumlah', 
+        'satuan', 
+        'kondisi', 
+        'fungsi', 
+        'gambar'
+    ];
+
+    protected $useTimestamps = true;
 }
