@@ -51,7 +51,25 @@
                                     <td><?= date('d/m/y H:i', strtotime($j['tgl_mulai'])); ?></td>
                                     <td><?= date('d/m/y H:i', strtotime($j['tgl_selesai'])); ?></td>
                                     <td class="text-center">
-                                        <span class="badge bg-secondary">Cek Waktu</span> 
+                                        <?php 
+                                            $sekarang = date('Y-m-d H:i:s');
+                                            $mulai    = $j['tgl_mulai'];
+                                            $selesai  = $j['tgl_selesai'];
+
+                                            if ($sekarang < $mulai) {
+                                                $status_teks = "Akan Datang";
+                                                $warna_badge = "info text-white";
+                                            } elseif ($sekarang >= $mulai && $sekarang <= $selesai) {
+                                                $status_teks = "Sedang Berlangsung";
+                                                $warna_badge = "warning text-dark";
+                                            } else {
+                                                $status_teks = "Selesai";
+                                                $warna_badge = "secondary";
+                                            }
+                                        ?>
+                                        <span class="badge bg-<?= $warna_badge; ?> px-3">
+                                            <?= $status_teks; ?>
+                                        </span>
                                     </td>
                                     
                                     <?php if (session()->get('logged_in')) : ?>
@@ -87,11 +105,13 @@
                                                             <div class="row">
                                                                 <div class="col-md-6 mb-3">
                                                                     <label class="form-label fw-bold small text-muted">Waktu Mulai</label>
-                                                                    <input type="datetime-local" name="tgl_mulai" class="form-control" value="<?= date('Y-m-d\TH:i', strtotime($j['tgl_mulai'])); ?>" required>
+                                                                    <input type="datetime-local" name="tgl_mulai" class="form-control" 
+                                                                        value="<?= date('Y-m-d\TH:i', strtotime($j['tgl_mulai'])); ?>" step="60" required>
                                                                 </div>
                                                                 <div class="col-md-6 mb-3">
                                                                     <label class="form-label fw-bold small text-muted">Waktu Selesai</label>
-                                                                    <input type="datetime-local" name="tgl_selesai" class="form-control" value="<?= date('Y-m-d\TH:i', strtotime($j['tgl_selesai'])); ?>" required>
+                                                                    <input type="datetime-local" name="tgl_selesai" class="form-control" 
+                                                                        value="<?= date('Y-m-d\TH:i', strtotime($j['tgl_selesai'])); ?>" step="60" required>
                                                                 </div>
                                                             </div>
                                                         </div>

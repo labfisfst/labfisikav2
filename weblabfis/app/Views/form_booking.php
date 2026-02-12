@@ -57,11 +57,11 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <small class="text-muted fw-bold">Tanggal & Jam Mulai</small>
-                                    <input type="datetime-local" name="tgl_mulai" class="form-control" required>
+                                    <input type="datetime-local" name="tgl_mulai" class="form-control" step="60" required>
                                 </div>
                                 <div class="col-md-6">
                                     <small class="text-muted fw-bold">Tanggal & Jam Selesai</small>
-                                    <input type="datetime-local" name="tgl_selesai" class="form-control" required>
+                                    <input type="datetime-local" name="tgl_selesai" class="form-control" step="60" required>
                                 </div>
                             </div>
                             <div class="form-text mt-2 text-info">
