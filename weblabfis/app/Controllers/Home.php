@@ -349,4 +349,19 @@ class Home extends BaseController
         session()->setFlashdata('pesan', 'Jadwal berhasil diperbarui.');
         return redirect()->back();
     }
+    public function jadwal_gabungan()
+    {
+        $bookingModel = new \App\Models\BookingModel();
+        
+        // Kita join dengan tabel alat untuk mendapatkan nama alat dan merek
+        $data = [
+            'title'  => 'Jadwal Penggunaan Gabungan',
+            'jadwal' => $bookingModel->select('booking.*, alat.nama_alat, alat.merek')
+                                    ->join('alat', 'alat.id = booking.alat_id')
+                                    ->orderBy('tgl_mulai', 'DESC')
+                                    ->findAll()
+        ];
+
+        return view('jadwal_gabungan', $data);
+    }
 }

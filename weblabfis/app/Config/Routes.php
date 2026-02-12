@@ -43,3 +43,5 @@ $routes->get('semua_alat', 'Home::semuaAlat');
 
 $routes->get('home/hapus_booking/(:num)', 'Home::hapus_booking/$1');
 $routes->post('home/update_booking/(:num)', 'Home::update_booking/$1');
+
+$routes->get('home/jadwal_gabungan', 'Home::jadwal_gabungan');

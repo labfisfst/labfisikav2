@@ -25,6 +25,11 @@
                             </select>
                             <span>entries</span>
                         </div>
+                        <div class="mb-3">
+                            <a href="/home/jadwal_gabungan" class="btn btn-primary shadow">
+                                <i class="bi bi-calendar-week me-2"></i> Lihat Semua Jadwal Penggunaan
+                            </a>
+                        </div>
                         <div class="border-start border-white ps-3">
                             <?php if (session()->get('logged_in')) : ?>
                                 <a href="/alat/tambah" class="btn btn-sm btn-light text-success fw-bold">

@@ -7,7 +7,7 @@
             <div class="card shadow-lg border-0">
                 <div class="card-header bg-success text-white py-4 text-center" style="border-bottom: 5px solid #14522d;">
                     <h3 class="mb-1 fw-bold">FORM PENGGUNAAN ALAT</h3>
-                    <p class="mb-0 opacity-75">Laboratorium Fisika - Universitas Padjadjaran</p>
+                    <p class="mb-0 opacity-75">Laboratorium Fisika - Fakultas Sains dan Teknologi</p>
                 </div>
 
                 <div class="card-body p-4">
@@ -23,7 +23,15 @@
                     <form action="/home/simpan_booking" method="post">
                         <?= csrf_field(); ?>
                         <input type="hidden" name="alat_id" value="<?= $alat['id']; ?>">
-
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-success"><i class="bi bi-hash me-2"></i>Pilih Unit</label>
+                            <select name="no_unit" class="form-select" required>
+                                <?php for($i = 1; $i <= $alat['jumlah']; $i++): ?>
+                                    <option value="<?= $i; ?>">Unit <?= $i; ?></option>
+                                <?php endfor; ?>
+                            </select>
+                            <small class="text-muted">Tersedia <?= $alat['jumlah']; ?> unit untuk alat ini.</small>
+                        </div>
                         <div class="mb-4">
                             <label class="form-label fw-bold text-success"><i class="bi bi-person-badge me-2"></i>Identitas Peminjam</label>
                             <div class="row g-3">
@@ -43,13 +51,11 @@
                         </div>
 
                         <hr>
-
-                        <div class="mb-4">
+                        <div class="mb-4">    
                             <label class="form-label fw-bold text-success"><i class="bi bi-info-circle me-2"></i>Detail Penggunaan</label>
                             <textarea name="keperluan" class="form-control mb-3" rows="3" placeholder="Apa tujuan penggunaan alat ini? (Sebutkan judul penelitian jika ada)" required></textarea>
                             <input type="text" name="dosen_pembimbing" class="form-control" placeholder="Dosen Pembimbing (Tulis '-' jika tidak ada)">
                         </div>
-
                         <hr>
 
                         <div class="mb-4">
